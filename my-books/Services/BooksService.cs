@@ -45,7 +45,7 @@ namespace my_books.Services
             _dbContext.SaveChanges();
         }
 
-        internal Book UpdateBook(int bookId, Book book)
+        public Book UpdateBook(int bookId, Book book)
         {
             var bookToUpdate = _dbContext.Books.FirstOrDefault(x => x.Id == bookId);
 
@@ -66,7 +66,7 @@ namespace my_books.Services
             return bookToUpdate;
         }
 
-        internal void DeleteBookById(int bookId)
+        public void DeleteBookById(int bookId)
         {
             var bookToDelete = _dbContext.Books.FirstOrDefault(x => x.Id == bookId);
 
