@@ -16,14 +16,21 @@ namespace my_books.Services
             _dbContext = appDbContext;
         }
 
-        public List<Author> GetAllAuthors()
+        public List<AuthorWithBooksVM> GetAllAuthors()
         {
-            return _dbContext.Authors.ToList();
+            return _dbContext.Authors.Select(x => new AuthorWithBooksVM { 
+                FullName = x.FullName,
+                BookTitles = x.Book_Authors.Select(t => t.Book.Title).ToList()
+            }).ToList();
         }
 
-        public Author GetAuthorById(int authorId)
+        public AuthorWithBooksVM GetAuthorById(int authorId)
         {
-            return _dbContext.Authors.FirstOrDefault(x => x.Id == authorId);
+            return _dbContext.Authors.Where(x => x.Id == authorId).Select(x => new AuthorWithBooksVM
+            {
+                FullName = x.FullName,
+                BookTitles = x.Book_Authors.Select(t => t.Book.Title).ToList()
+            }).FirstOrDefault();
         }
 
         public void AddAuthor(AuthorVM author)
@@ -57,7 +64,7 @@ namespace my_books.Services
 
             if (authorToDelete != null)
             {
-                _dbContext.Remove(authorToDelete);
+                _dbContext.Authors.Remove(authorToDelete);
                 _dbContext.SaveChanges();
             }
         }

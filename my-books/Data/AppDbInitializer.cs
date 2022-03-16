@@ -22,7 +22,6 @@ namespace my_books.Data
                         new Book
                         {
                             Title = "Title 1",
-                            Author = "Author 1",
                             Description = "Description 1",
                             IsRead = true,
                             DateRead = DateTime.Now.AddDays(-10),
@@ -34,7 +33,6 @@ namespace my_books.Data
                         new Book
                         {
                             Title = "Title 2",
-                            Author = "Author 2",
                             Description = "Description 2",
                             IsRead = false,
                             Genre = "Detective",

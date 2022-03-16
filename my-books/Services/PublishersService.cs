@@ -16,14 +16,29 @@ namespace my_books.Services
             _dbContext = appDbContext;
         }
 
-        public List<Publisher> GetAllPublishers()
+        public List<PublisherWithBooksVM> GetAllPublishers()
         {
-            return _dbContext.Publishers.ToList();
+            return _dbContext.Publishers.Select(x => new PublisherWithBooksVM
+            {
+                Name = x.Name,
+                BooksAuthors = x.Books.Select(y => new BookAuthorVM
+                {
+                    Title = y.Title,
+                    Authors = y.Book_Authors.Select(a => a.Author.FullName).ToList()
+                }).ToList()
+            }).ToList();
         }
 
-        public Publisher GetPublisherById(int publisherId)
+        public PublisherWithBooksVM GetPublisherById(int publisherId)
         {
-            return _dbContext.Publishers.FirstOrDefault(x => x.Id == publisherId);
+            return _dbContext.Publishers.Where(x => x.Id == publisherId).Select(x => new PublisherWithBooksVM
+            {
+                Name = x.Name,
+                BooksAuthors = x.Books.Select(y => new BookAuthorVM {
+                    Title = y.Title,
+                    Authors = y.Book_Authors.Select(a => a.Author.FullName).ToList()
+                }).ToList()
+            }).FirstOrDefault();
         }
 
         public void AddPublisher(PublisherVM publisher)
@@ -57,7 +72,7 @@ namespace my_books.Services
 
             if (publisherToDelete != null)
             {
-                _dbContext.Remove(publisherToDelete);
+                _dbContext.Publishers.Remove(publisherToDelete);
                 _dbContext.SaveChanges();
             }
         }
